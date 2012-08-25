@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, os
 from pygame.locals import *
 
 # set up the colors
@@ -26,7 +26,7 @@ def init():
     pygame.display.set_caption('Human Evolution!')
 
     # set up fonts
-    basicFont = pygame.font.Font('EBGaramond08-Regular.ttf', 30)
+    basicFont = pygame.font.Font('res' + os.sep + 'EBGaramond08-Regular.ttf', 30)
 
     # draw the white background onto the surface
     windowSurface.fill(BLACK)
