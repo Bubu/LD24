@@ -1,18 +1,8 @@
 import pygame, sys, os
 from pygame.locals import *
+from constants import *
 
-# set up the colors
-BLACK = (0, 0, 0)
-BG_COLOR = (168, 165 , 160)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
 
-# mouse buttons
-LEFT = 1
-MIDDLE = 2
-RIGHT = 3
 
 class game:
     
@@ -22,42 +12,64 @@ class game:
         
         # set up the window
         self.screen = pygame.display.set_mode((800, 600), 0, 32)
-        pygame.display.set_caption('Human Evolution!')
+        pygame.display.set_caption('Human Evolution')
+        self.introStage = 0
+        self.tutorial = -1
 
         # set up fonts
-        basicFont = pygame.font.Font('res' + os.sep + 'EBGaramond08-Regular.ttf', 30)
-
-        # draw the white background onto the surface
-        self.screen.fill(BLACK)
-
-        # set up the text
-        text = basicFont.render('Once upon a time on our blue planet...', True, WHITE)
-        textRect = text.get_rect()
-        textRect.centerx = self.screen.get_rect().centerx
-        textRect.centery = self.screen.get_rect().centery
-        # draw the text onto the surface
-        self.screen.blit(text, textRect)
+        self.logoText = pygame.font.Font('res' + os.sep + FONT_GARAMOND, 60)
+        self.introText = pygame.font.Font('res' + os.sep + FONT_GARAMOND, 30)
+        self.descriptionText = pygame.font.Font('res' + os.sep + FONT_GARAMOND, 22)
+        
+    def close(self):
+         pygame.quit()
 
     def run(self):
         while True:
+            if self.introStage != -1:
+                self.renderIntro()
+            else:
+                self.renderGame()
+            if self.turorial != -1:
+                self.renderTurorial()
+                
+            pygame.display.update()
             event = pygame.event.wait()
             if event.type == QUIT:
                 return
-            if event.type == KEYUP and event.key == K_ESCAPE:
+            if event.type == KEYUP and event.key == K_F4 and bool(event.mod & KMOD_ALT):
                 return
-            if event.type == MOUSEBUTTONUP and event.button == LEFT:
-                self.screen.fill(BLACK)
-            pygame.display.update()
+            if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
+                self.advanceIntro()
+                        
+    def renderIntro(self):
+        self.screen.fill(BLACK)
 
-    def close(self):
-        pygame.quit()
+        if self.introStage == 0:
+            text = self.logoText.render(T_logo, True, WHITE)
+        else:
+            text = self.introText.render(T_intro[self.introStage - 1], True, WHITE)
+        textRect = text.get_rect()
+        textRect.centerx = self.screen.get_rect().centerx
+        textRect.centery = self.screen.get_rect().centery
+        self.screen.blit(text, textRect)
 
+    def advanceIntro(self):
+        if self.introStage < len(T_intro):
+            self.introStage +=1
+        else:
+            self.introStage = -1
+            self.tutorial = 1
+        
+    def renderGame(self):
+        self.screen.fill(BG_COLOR)
+        
+class TextHandler():
+    def __init__(self):
+        pass
 
 # draw a blue circle onto the surface
 #pygame.draw.circle(windowSurface, BLUE, (300, 50), 20, 0)
-
-# draw a red ellipse onto the surface
-#pygame.draw.ellipse(windowSurface, RED, (300, 250, 40, 80), 1)
 
 
 
