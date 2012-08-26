@@ -1,4 +1,4 @@
-import pygame, pygame.gfxdraw, sys, element, operator
+import pygame, pygame.gfxdraw, sys, element, operator, TextProvider
 from pygame.locals import *
 from constants import *
 from util import number
@@ -25,10 +25,9 @@ class game:
         self.currentScene = 0
 
         # set up fonts
-        self.logoText = pygame.font.Font(PATH + FONT_GARAMOND, 60)
-        self.introText = pygame.font.Font(PATH + FONT_GARAMOND, 30)
-        self.descriptionText = pygame.font.Font(PATH + FONT_GARAMOND, 22)
-        self.captionText = pygame.font.Font(PATH + FONT_GARAMOND, 14)
+        TextProvider.init()
+
+        self.generateElements()
         
     def close(self):
          pygame.quit()
@@ -56,9 +55,9 @@ class game:
         self.screen.fill(BLACK)
 
         if self.intro.number == 0:
-            text = self.logoText.render(T_logo, True, WHITE)
+            text = TextProvider.logoText.render(T_logo, True, WHITE)
         else:
-            text = self.introText.render(T_intro[self.intro.number - 1], True, WHITE)
+            text = TextProvider.introText.render(T_intro[self.intro.number - 1], True, WHITE)
         textRect = text.get_rect()
         textRect.centerx = self.screen.get_rect().centerx
         textRect.centery = self.screen.get_rect().centery
@@ -73,7 +72,7 @@ class game:
             self.scenes[self.currentScene].number = 1
             
     def renderTurorial(self):
-        text = self.introText.render(T_tutorial[self.tutorial.number - 1], True, WHITE)
+        text = TextProvider.introText.render(T_tutorial[self.tutorial.number - 1], True, WHITE)
         textRect = text.get_rect()
         textRect.midbottom = (self.screen.get_rect().midbottom[0], self.screen.get_rect().midbottom[1]-20)
         self.screen.blit(text, textRect)
@@ -96,28 +95,16 @@ class game:
         pygame.draw.aaline(self.screen, DGRAY, b, (450, 300))
 
     def drawElements(self):
-        pygame.gfxdraw.aacircle(self.screen, 30, 30, 20, WHITE)
-        ele = pygame.image.load(PATH + 'CO2.png')
-        eleRect = ele.get_rect()
-        eleRect.center = (30,30)
-        text = self.captionText.render('Carbon dioxide', True, BLACK)
-        textRect = text.get_rect()
-        textRect.center = (30, 45)
-        self.screen.blit(ele, eleRect)
-        self.screen.blit(text, textRect)
+        pos = 0
+        for e in self.elements:
+            if e.active == True:
+                e.draw(pos)
+                pos += 1
 
-    #def DrawTarget(self):
-    
-    # outside antialiased circle
-    #pygame.gfxdraw.aacircle(self.image, self.rect.width/2, self.rect.height/2, self.rect.width/2 - 1, self.color)
-
-    # outside filled circle
-    #pygame.gfxdraw.filled_ellipse(self.image, self.rect.width/2, self.rect.height/2, self.rect.width/2 - 1, self.rect.width/2 - 1, self.color)
-    
-    
-    #temp = pygame.Surface((TARGET_SIZE,TARGET_SIZE), SRCALPHA) # the SRCALPHA flag denotes pixel-level alpha
-    
-    #self.image.blit(temp, (0,0), None, BLEND_ADD)
+    def generateElements(self):
+        self.elements = []
+        for e in ElementLabels.keys():
+            self.elements.append(element.Element(self.screen, e))
 
 
 aGame = game()

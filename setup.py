@@ -2,7 +2,10 @@ import sys
 from cx_Freeze import setup, Executable
 
 # Dependencies are automatically detected, but it might need fine tuning.
-build_exe_options = {"excludes": ["numpy"], "optimize": 2, "compressed" : True, "include_files" : ["res"], "include_in_shared_zip": True}
+build_exe_options = {"excludes": ["numpy"],
+                     "optimize": 2,
+                     "compressed" : True,
+                     "include_files" : ["res"]}
 
 # GUI applications require a different base on Windows (the default is for a
 # console application).
