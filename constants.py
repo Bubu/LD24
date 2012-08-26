@@ -1,4 +1,4 @@
-import os
+import os, collections
 
 # colors
 BLACK = (0, 0, 0)
@@ -33,9 +33,9 @@ T_intro = ['Once upon a time on our blue planet...',
 T_tutorial = ['(Combine multiple elements to form new ones.)',
  'Can you create life? Sentient species? And then?']
  
-ElementLabels = {'co2': 'CO2',
-				 'steam': 'Steam',
-				 'sun': 'Sun',
-				 'lava': 'Lava',
-				 'dc': 'CO2',
-				 }
+ElementLabels = collections.OrderedDict([('co2', 'CO2'),
+				 ('steam', 'Steam'),
+				 ('sun', 'Sun'),
+				 ('lava', 'Lava'),
+				 ('dc', 'CO2')]
+				 )

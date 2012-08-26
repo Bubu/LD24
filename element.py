@@ -1,6 +1,5 @@
 import pygame, pygame.gfxdraw, TextProvider
 from pygame.locals import *
-from math import sqrt
 from constants import *
 
 class Element(pygame.sprite.Sprite):
@@ -10,9 +9,21 @@ class Element(pygame.sprite.Sprite):
 		self.label = ElementLabels[self.type]
 		self.screen = screen
 		self.active = True
+		self.radius = 27
 	
 	def draw(self, pos):
-		#pygame.gfxdraw.aacircle(self.screen, 30, 30, 25, WHITE)
+		self.coords = (35 + pos*65,35)
+		self.drawfree()
+		
+	def isClicked(self,pos):
+		posSprite = pygame.sprite.Sprite()
+		posSprite.rect = pygame.Rect(pos[0],pos[1],0,0)
+		if pygame.sprite.collide_circle(self,posSprite):
+			return True
+		else:
+			return False
+	
+	def drawfree(self):
 		frame = pygame.image.load(PATH + 'empty.png')
 		try:
 			ele = pygame.image.load(PATH + self.type + '.png')
@@ -22,9 +33,10 @@ class Element(pygame.sprite.Sprite):
 		eleRect.center = frame.get_rect().center
 		frame.blit(ele,eleRect)
 		frameRect = frame.get_rect()
-		frameRect.center = (35 + pos*65,35)
+		frameRect.center = self.coords
+		self.rect = frameRect
 		text = TextProvider.captionText.render(self.label, True, BLACK)
 		textRect = text.get_rect()
-		textRect.center = (35 + pos*65, 70)
+		textRect.center = (self.coords[0],self.coords[1]+35)
 		self.screen.blit(frame, frameRect)
 		self.screen.blit(text, textRect)

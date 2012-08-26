@@ -1,4 +1,4 @@
-import pygame, pygame.gfxdraw, sys, element, operator, TextProvider
+import pygame, pygame.gfxdraw, sys, element, operator, TextProvider, copy
 from pygame.locals import *
 from constants import *
 from util import number
@@ -23,11 +23,13 @@ class game:
         self.scenes = [self.intro, self.tutorial, self.game]
         self.sceneText = {self.intro: T_intro, self.tutorial: T_tutorial}
         self.currentScene = 0
+        self.pickup = None
 
         # set up fonts
         TextProvider.init()
 
         self.generateElements()
+        self.sprites = self.elements
         
     def close(self):
          pygame.quit()
@@ -50,6 +52,16 @@ class game:
             if self.game.number != 1:
                 if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
                     self.advanceScene()
+            else:
+                if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
+                    for s in self.sprites:
+                        if s.isClicked(event.pos):
+                            self.pickup = copy.copy(s)
+                if event.type == MOUSEBUTTONUP and event.button == LEFT:
+                    self.pickup = None
+                if event.type == MOUSEMOTION:
+                    if self.pickup is not None:
+                        self.pickup.coords = event.pos
                         
     def renderIntro(self):
         self.screen.fill(BLACK)
@@ -84,6 +96,8 @@ class game:
         pygame.gfxdraw.aacircle(self.screen, 800-200, 300, 120, DGRAY)
         self.drawArray()
         self.drawElements()
+        if self.pickup is not None:
+            self.pickup.drawfree()
         
     def drawArray(self):
         pygame.gfxdraw.line(self.screen, 350, 280, 420, 280, DGRAY)
