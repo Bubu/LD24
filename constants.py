@@ -43,5 +43,6 @@ ElementLabels = collections.OrderedDict([('co2', 'CO2'),
 				 ('bolt', 'Electricity'),
 				 ('dna', 'DNA'),
 				 ('rna', 'RNA'),
-				 ('bla', 'Electricity')]
+				 ('water', 'Water'),
+				 ('stone', 'Stone')]
 				 )
