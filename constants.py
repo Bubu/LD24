@@ -21,6 +21,8 @@ FONT_GARAMOND = 'EBGaramond08-Regular.ttf'
 
 PATH = 'res' + os.sep
 
+ELEMENT_RADIUS = 27
+
 # Text lines
 T_logo = 'Human Evolution'
 T_intro = ['Once upon a time on our blue planet...',

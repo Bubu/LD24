@@ -9,7 +9,7 @@ class Element(pygame.sprite.Sprite):
 		self.label = ElementLabels[self.type]
 		self.screen = screen
 		self.active = True
-		self.radius = 27
+		self.radius = ELEMENT_RADIUS
 	
 	def draw(self, pos):
 		self.coords = (35 + pos*65,35)

@@ -2,6 +2,7 @@ import pygame, pygame.gfxdraw, sys, element, operator, TextProvider, copy
 from pygame.locals import *
 from constants import *
 from util import number
+from math import sqrt
 
 class game:
     
@@ -24,6 +25,8 @@ class game:
         self.sceneText = {self.intro: T_intro, self.tutorial: T_tutorial}
         self.currentScene = 0
         self.pickup = None
+        self.middleAreas = [MiddleArea(200,300,120),MiddleArea(800-200, 300, 120)]
+        self.reactants = []
 
         # set up fonts
         TextProvider.init()
@@ -58,7 +61,10 @@ class game:
                         if s.isClicked(event.pos):
                             self.pickup = copy.copy(s)
                 if event.type == MOUSEBUTTONUP and event.button == LEFT:
-                    self.pickup = None
+                    if self.pickup is not None:
+                        if self.middleAreas[0].isinDrop(event.pos ):
+                            self.reactants.append(self.pickup)
+                        self.pickup = None
                 if event.type == MOUSEMOTION:
                     if self.pickup is not None:
                         self.pickup.coords = event.pos
@@ -92,14 +98,15 @@ class game:
     def renderGame(self):
         self.screen.fill(BG_COLOR)
         pygame.gfxdraw.hline(self.screen, 0, 800, 120, DGRAY)
-        pygame.gfxdraw.aacircle(self.screen, 200, 300, 120, DGRAY)
-        pygame.gfxdraw.aacircle(self.screen, 800-200, 300, 120, DGRAY)
-        self.drawArray()
+        for a in self.middleAreas:
+            a.draw(self.screen)
+        self.drawArrow()
         self.drawElements()
         if self.pickup is not None:
             self.pickup.drawfree()
+        self.drawReactants()
         
-    def drawArray(self):
+    def drawArrow(self):
         pygame.gfxdraw.line(self.screen, 350, 280, 420, 280, DGRAY)
         pygame.gfxdraw.line(self.screen, 350, 600-280, 420, 600-280, DGRAY)
 
@@ -119,7 +126,22 @@ class game:
         self.elements = []
         for e in ElementLabels.keys():
             self.elements.append(element.Element(self.screen, e))
+            
+    def drawReactants(self):
+        for r in self.reactants:
+            r.drawfree()    
+        
+class MiddleArea:
+    def __init__(self,x,y,r):
+        self.centerx = x
+        self.centery = y
+        self.radius = r
+	
+    def draw(self, screen):
+        pygame.gfxdraw.aacircle(screen, self.centerx, self.centery, self.radius, DGRAY)
 
+    def isinDrop(self, pos):
+        return sqrt((self.centerx - pos[0])**2 + (self.centery - pos[1])**2) <= self.radius - (ELEMENT_RADIUS-2)
 
 aGame = game()
 aGame.run()
