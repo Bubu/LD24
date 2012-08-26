@@ -32,7 +32,7 @@ class game:
         TextProvider.init()
 
         self.generateElements()
-        self.sprites = self.elements
+        self.sprites = copy.copy(self.elements)
         
     def close(self):
          pygame.quit()
@@ -59,11 +59,17 @@ class game:
                 if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
                     for s in self.sprites:
                         if s.isClicked(event.pos):
-                            self.pickup = copy.copy(s)
+                            if s in self.reactants:
+                                self.reactants.remove(s)
+                                self.pickup = s
+                            else:
+                                self.pickup = copy.copy(s)
                 if event.type == MOUSEBUTTONUP and event.button == LEFT:
                     if self.pickup is not None:
                         if self.middleAreas[0].isinDrop(event.pos ):
                             self.reactants.append(self.pickup)
+                            self.sprites.append(self.pickup)
+                            self.react()
                         self.pickup = None
                 if event.type == MOUSEMOTION:
                     if self.pickup is not None:
@@ -129,7 +135,10 @@ class game:
             
     def drawReactants(self):
         for r in self.reactants:
-            r.drawfree()    
+            r.drawfree()
+
+    def react(self):
+        pass
         
 class MiddleArea:
     def __init__(self,x,y,r):
