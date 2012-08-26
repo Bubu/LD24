@@ -7,10 +7,7 @@ from math import sqrt
 class game:
     
     def __init__(self):
-        # set up pygame
         pygame.init()
-        
-        # set up the window
         self.screen = pygame.display.set_mode((800, 600), 0, 32)
         pygame.display.set_caption('Human Evolution')
         if INTRO == True:
@@ -25,15 +22,16 @@ class game:
         self.sceneText = {self.intro: T_intro, self.tutorial: T_tutorial}
         self.currentScene = 0
         self.pickup = None
-        self.middleAreas = [MiddleArea(200,300,120),MiddleArea(800-200, 300, 120)]
+        self.middleAreas = [MiddleArea(200,300+VERT_OFFSET,120),MiddleArea(800-200, 300+VERT_OFFSET, 120)]
         self.reactants = []
         self.products = []
-
-        # set up fonts
         TextProvider.init()
 
         self.generateElements()
         self.sprites = copy.copy(self.elements)
+        
+        self.pages = [Page(1, self.elements)]
+        self.activePage = self.pages[0]
         
     def close(self):
          pygame.quit()
@@ -62,6 +60,7 @@ class game:
                         if s.isClicked(event.pos):
                             if s in self.reactants:
                                 self.reactants.remove(s)
+                                self.sprites.remove(s)
                                 self.react()
                                 self.pickup = s
                             else:
@@ -70,7 +69,7 @@ class game:
                         
                 if event.type == MOUSEBUTTONUP and event.button == LEFT:
                     if self.pickup is not None:
-                        if self.middleAreas[0].isinDrop(event.pos ):
+                        if self.middleAreas[0].isinDrop(event.pos):
                             self.reactants.append(self.pickup)
                             self.sprites.append(self.pickup)
                             self.react()
@@ -107,7 +106,8 @@ class game:
         
     def renderGame(self):
         self.screen.fill(BG_COLOR)
-        pygame.gfxdraw.hline(self.screen, 0, 800, 120, DGRAY)
+        self.drawPages()
+        pygame.gfxdraw.hline(self.screen, 0, 800, 180, DGRAY)
         for a in self.middleAreas:
             a.draw(self.screen)
         self.drawArrow()
@@ -118,13 +118,13 @@ class game:
         self.drawProducts()
         
     def drawArrow(self):
-        pygame.gfxdraw.line(self.screen, 350, 280, 420, 280, DGRAY)
-        pygame.gfxdraw.line(self.screen, 350, 600-280, 420, 600-280, DGRAY)
+        pygame.gfxdraw.line(self.screen, 350, 280+VERT_OFFSET, 420, 280+VERT_OFFSET, DGRAY)
+        pygame.gfxdraw.line(self.screen, 350, 600-280+VERT_OFFSET, 420, 600-280+VERT_OFFSET, DGRAY)
 
-        a = tuple(map(operator.add,(450, 300) ,tuple(1.7 * i for i in(-30, -20))))
-        b = (a[0],600-a[1])
-        pygame.draw.aaline(self.screen, DGRAY, a, (450, 300))
-        pygame.draw.aaline(self.screen, DGRAY, b, (450, 300))
+        a = tuple(map(operator.add,(450, 300+VERT_OFFSET) ,tuple(1.7 * i for i in(-30, -20))))
+        b = (a[0],600-a[1]+VERT_OFFSET*2)
+        pygame.draw.aaline(self.screen, DGRAY, a, (450, 300+VERT_OFFSET))
+        pygame.draw.aaline(self.screen, DGRAY, b, (450, 300+VERT_OFFSET))
 
     def drawElements(self):
         pos = 0
@@ -157,9 +157,25 @@ class game:
             i = 0
             for p in tmp_products:
                 e = element.Element(self.screen, p)
-                e.coords = tuple(map(operator.add,(600,300),PositionMap[len(tmp_products)][i]))
+                e.coords = tuple(map(operator.add,(600,300+VERT_OFFSET),PositionMap[len(tmp_products)][i]))
                 self.products.append(e)
                 i +=1
+
+    def drawPages(self):
+        if len(self.pages) != 1 or True:
+            for p in self.pages:
+                if p == self.activePage:
+                    frame = pygame.image.load(PATH + 'page_active.png')
+                    text = TextProvider.pageText.render(str(p.number), True, BLACK)
+                else:
+                    frame = pygame.image.load(PATH + 'page_inactive.png')
+                    text = TextProvider.pageText.render(str(p.number), True, BLACK)
+
+                
+                pos = (p.number * 40 -20, 10)
+                textRect = text.get_rect()
+                textRect.center = pos
+                self.screen.blit(text, textRect)
         
 class MiddleArea:
     def __init__(self,x,y,r):
@@ -172,6 +188,11 @@ class MiddleArea:
 
     def isinDrop(self, pos):
         return sqrt((self.centerx - pos[0])**2 + (self.centery - pos[1])**2) <= self.radius - (ELEMENT_RADIUS-2)
+    
+class Page:
+    def __init__(self, number, elements):
+        self.number = number
+        self.elements = elements
 
 aGame = game()
 aGame.run()

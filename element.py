@@ -12,7 +12,7 @@ class Element(pygame.sprite.Sprite):
 		self.radius = ELEMENT_RADIUS
 	
 	def draw(self, pos):
-		self.coords = (35 + pos*65,35)
+		self.coords = (35 + pos*65,51)
 		self.drawfree()
 		
 	def isClicked(self,pos):

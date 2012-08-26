@@ -23,6 +23,7 @@ appdir = os.path.dirname(sys.argv[0])
 PATH = os.path.join(appdir, "res") + os.sep
 
 ELEMENT_RADIUS = 27
+VERT_OFFSET = 40
 
 # Text lines
 T_logo = 'Human Evolution'
