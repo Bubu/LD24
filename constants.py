@@ -1,5 +1,5 @@
-import os, collections
-
+import os,sys, collections
+from collections import Counter
 # colors
 BLACK = (0, 0, 0)
 BG_COLOR = (196, 195, 192)
@@ -19,7 +19,8 @@ RIGHT = 3
 # Fonts
 FONT_GARAMOND = 'EBGaramond08-Regular.ttf'
 
-PATH = 'res' + os.sep
+appdir = os.path.dirname(sys.argv[0])
+PATH = os.path.join(appdir, "res") + os.sep
 
 ELEMENT_RADIUS = 27
 
@@ -36,7 +37,7 @@ T_tutorial = ['(Combine multiple elements to form new ones.)',
  'Can you create life? Sentient species? And then?']
  
 ElementLabels = collections.OrderedDict([('co2', 'CO2'),
-				 ('steam', 'Steam'),
+				 ('steam', 'H2O (gas.)'),
 				 ('sun', 'Sun'),
 				 ('lava', 'Lava'),
 				 ('sand', 'Sand'),
@@ -44,5 +45,14 @@ ElementLabels = collections.OrderedDict([('co2', 'CO2'),
 				 ('dna', 'DNA'),
 				 ('rna', 'RNA'),
 				 ('water', 'Water'),
-				 ('stone', 'Stone')]
-				 )
+				 ('stone', 'Stone'),
+				 ('photosynthesis', 'Photosynth.'),
+				 ('sugar', 'Sugar'),
+				 ('o2', 'Oxygen'),
+				 ])
+				 
+Reactions = {frozenset(Counter(['water','sun']).items()):('steam',),
+			 frozenset(Counter(['water','co2','sun']).items()):('o2','sugar'),
+			}
+
+PositionMap = {1: [(0,0)], 2: [(-40,0),(40,0)],3:[(-40,-40),(40,-40),(0,40)],4:[(-40,-40),(40,-40),(-40,40),(40,40)]}

@@ -27,6 +27,7 @@ class game:
         self.pickup = None
         self.middleAreas = [MiddleArea(200,300,120),MiddleArea(800-200, 300, 120)]
         self.reactants = []
+        self.products = []
 
         # set up fonts
         TextProvider.init()
@@ -61,9 +62,12 @@ class game:
                         if s.isClicked(event.pos):
                             if s in self.reactants:
                                 self.reactants.remove(s)
+                                self.react()
                                 self.pickup = s
                             else:
                                 self.pickup = copy.copy(s)
+                            break
+                        
                 if event.type == MOUSEBUTTONUP and event.button == LEFT:
                     if self.pickup is not None:
                         if self.middleAreas[0].isinDrop(event.pos ):
@@ -111,6 +115,7 @@ class game:
         if self.pickup is not None:
             self.pickup.drawfree()
         self.drawReactants()
+        self.drawProducts()
         
     def drawArrow(self):
         pygame.gfxdraw.line(self.screen, 350, 280, 420, 280, DGRAY)
@@ -136,9 +141,25 @@ class game:
     def drawReactants(self):
         for r in self.reactants:
             r.drawfree()
+            
+    def drawProducts(self):
+        for p in self.products:
+            p.drawfree()
 
     def react(self):
-        pass
+        self.products = []
+        tmp_reactants = []
+        for r in self.reactants:
+            tmp_reactants.append(r.type)
+        tmp_reactants = frozenset(Counter(tmp_reactants).items())
+        if tmp_reactants in Reactions:
+            tmp_products = Reactions[tmp_reactants]
+            i = 0
+            for p in tmp_products:
+                e = element.Element(self.screen, p)
+                e.coords = tuple(map(operator.add,(600,300),PositionMap[len(tmp_products)][i]))
+                self.products.append(e)
+                i +=1
         
 class MiddleArea:
     def __init__(self,x,y,r):
