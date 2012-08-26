@@ -30,7 +30,7 @@ class game:
         self.generateElements()
         self.sprites = copy.copy(self.elements)
         
-        self.pages = [Page(1, self.elements)]
+        self.pages = [Page(1, self.elements),]
         self.activePage = self.pages[0]
         
     def close(self):
@@ -162,20 +162,31 @@ class game:
                 i +=1
 
     def drawPages(self):
-        if len(self.pages) != 1 or True:
-            for p in self.pages:
-                if p == self.activePage:
-                    frame = pygame.image.load(PATH + 'page_active.png')
-                    text = TextProvider.pageText.render(str(p.number), True, BLACK)
-                else:
-                    frame = pygame.image.load(PATH + 'page_inactive.png')
-                    text = TextProvider.pageText.render(str(p.number), True, BLACK)
+        i = 1
+        for p in self.pages:
+            if p == self.activePage:
+                frame = pygame.image.load(PATH + 'page_active.png')
+                text = TextProvider.pageText.render(str(p.number), True, BLACK)
+            else:
+                frame = pygame.image.load(PATH + 'page_inactive.png')
+                text = TextProvider.pageText.render(str(p.number), True, BLACK)
 
-                
-                pos = (p.number * 40 -20, 10)
-                textRect = text.get_rect()
-                textRect.center = pos
-                self.screen.blit(text, textRect)
+            
+            pos = (p.number * 38 -19, 9)
+            textRect = text.get_rect()
+            textRect.center = frame.get_rect().center
+            frame.blit(text, textRect)
+            frameRect = frame.get_rect()
+            frameRect.center = pos
+            self.screen.blit(frame, frameRect)
+            i+=1
+
+        frame = pygame.image.load(PATH + 'page_inactive.png')
+        text = TextProvider.pageText.render(str(p.number), True, BLACK)
+        pos = (i * 38 -19, 9)
+        frameRect = frame.get_rect()
+        frameRect.center = pos
+        self.screen.blit(frame, frameRect)
         
 class MiddleArea:
     def __init__(self,x,y,r):
