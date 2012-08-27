@@ -18,6 +18,8 @@ RIGHT = 3
 
 # Fonts
 FONT_GARAMOND = 'EBGaramond08-Regular.ttf'
+MUSIC = ['wolfram.ambient1.mid','wolfram.guitar1.mid','wolfram.rampb1.mid']
+SOUNDS = ['react.wav', 'new_element.wav']
 
 appdir = os.path.dirname(sys.argv[0])
 PATH = os.path.join(appdir, "res") + os.sep

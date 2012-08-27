@@ -1,0 +1,34 @@
+computer computer; network
+network network; internet
+internet people; social network
+lighting wood; fire
+h2 o2 fire; water water
+salpetre sulfur charcoal; gunpowder
+gunpowder steel; firearm
+gunpowder fire; explosion
+fire wood; charcoal
+water sun; steam
+water co2 sun chlorophyll; sugar o2
+o2 iron; rust
+sand fire; glass
+stone water; sand
+lava water; stone
+wood human; tools
+iron carbon; steel
+diamond fire; carbon co2
+carbon fire o2; co
+carbon fire o2 o2; co2
+sugar fire; carbon co2 steam
+sulfur o2; so2
+sulfur bible; brimstone
+so2 o2; so3
+so3 h2o; h2so4
+h2so4 iron; h2so4
+h2so4 wood; h2so4
+h2so4 cloth; h2so4
+h2so4 human; h2so4
+sun h2o co2; proteins lipids rna
+rna rna; dna
+dna lipids proteins; prokaryote
+prokaryote prokaryote; eukaryote
+prokaryote; cynobacterium

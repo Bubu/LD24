@@ -3,10 +3,12 @@ from pygame.locals import *
 from constants import *
 from util import number
 from math import sqrt
+MUSIC_END = pygame.USEREVENT + 1
 
 class game:
     
     def __init__(self):
+        pygame.mixer.pre_init(22050, -16, 2, 256)
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600), 0, 32)
         pygame.display.set_caption('Human Evolution')
@@ -32,6 +34,13 @@ class game:
         
         self.pages = [Page(1, self.elements),]
         self.activePage = self.pages[0]
+        self.song = 0
+        pygame.mixer.music.load(PATH + MUSIC[self.song])
+        pygame.mixer.music.set_endevent(MUSIC_END)
+        self.init = True
+        self.sounds = {}
+        for s in SOUNDS:
+            self.sounds[s]= pygame.mixer.Sound(PATH + s)
         
     def close(self):
          pygame.quit()
@@ -75,14 +84,18 @@ class game:
                             self.react()
                         self.pickup = None
                 if event.type == MOUSEMOTION:
+                    pygame.time.wait(5)
                     if self.pickup is not None:
                         self.pickup.coords = event.pos
+            if event.type == MUSIC_END:
+                self.handleMusic()
                         
     def renderIntro(self):
         self.screen.fill(BLACK)
 
         if self.intro.number == 0:
-            text = TextProvider.logoText.render(T_logo, True, WHITE)
+            text = pygame.image.load(PATH + 'title.png')
+            #it's not text... too lazy
         else:
             text = TextProvider.introText.render(T_intro[self.intro.number - 1], True, WHITE)
         textRect = text.get_rect()
@@ -105,8 +118,13 @@ class game:
         self.screen.blit(text, textRect)
         
     def renderGame(self):
+        if self.init:
+            pygame.mixer.music.play()
+            self.init = False
+            
         self.screen.fill(BG_COLOR)
         self.drawPages()
+        self.drawMute()
         pygame.gfxdraw.hline(self.screen, 0, 800, 180, DGRAY)
         for a in self.middleAreas:
             a.draw(self.screen)
@@ -153,6 +171,7 @@ class game:
             tmp_reactants.append(r.type)
         tmp_reactants = frozenset(Counter(tmp_reactants).items())
         if tmp_reactants in Reactions:
+            self.sounds['react.wav'].play()
             tmp_products = Reactions[tmp_reactants]
             i = 0
             for p in tmp_products:
@@ -187,6 +206,16 @@ class game:
         frameRect = frame.get_rect()
         frameRect.center = pos
         self.screen.blit(frame, frameRect)
+
+    def handleMusic(self):
+        if self.song < len(MUSIC)-1:
+            self.song +=1
+        pygame.mixer.music.load(PATH + MUSIC[self.song])
+        pygame.mixer.music.play()
+
+    def drawMute(self):
+        #need that... but later
+        pass
         
 class MiddleArea:
     def __init__(self,x,y,r):
