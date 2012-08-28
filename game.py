@@ -11,7 +11,7 @@ class game:
         pygame.mixer.pre_init(22050, -16, 2, 256)
         pygame.init()
         self.screen = pygame.display.set_mode((800, 600), 0, 32)
-        pygame.display.set_caption('Human Evolution')
+        pygame.display.set_caption('Evolution of a Planet')
         if INTRO == True:
             self.intro = number(0)
             self.tutorial = number(-1)
@@ -30,10 +30,12 @@ class game:
         TextProvider.init()
 
         self.generateElements()
-        self.sprites = copy.copy(self.elements)
+        self.generateElementBar()
+        self.sprites = copy.copy(self.activeElements) # sprites = clickable elements
         
-        self.pages = [Page(1, self.elements),]
+        self.pages = [Page(1, self.activeElements, self),Page(2, [], self)]
         self.activePage = self.pages[0]
+        self.sprites  = self.sprites + copy.copy(self.pages)
         self.song = 0
         pygame.mixer.music.load(PATH + MUSIC[self.song])
         pygame.mixer.music.set_endevent(MUSIC_END)
@@ -67,13 +69,7 @@ class game:
                 if event.type == MOUSEBUTTONDOWN and event.button == LEFT:
                     for s in self.sprites:
                         if s.isClicked(event.pos):
-                            if s in self.reactants:
-                                self.reactants.remove(s)
-                                self.sprites.remove(s)
-                                self.react()
-                                self.pickup = s
-                            else:
-                                self.pickup = copy.copy(s)
+                            s.handleClick()
                             break
                         
                 if event.type == MOUSEBUTTONUP and event.button == LEFT:
@@ -146,7 +142,7 @@ class game:
 
     def drawElements(self):
         pos = 0
-        for e in self.elements:
+        for e in self.activePage.elements:
             if e.active == True:
                 e.draw(pos)
                 pos += 1
@@ -154,7 +150,14 @@ class game:
     def generateElements(self):
         self.elements = []
         for e in ElementLabels.keys():
-            self.elements.append(element.Element(self.screen, e))
+            self.elements.append(element.Element(e,self))
+
+    def generateElementBar(self):
+        element.initializeActive()
+        self.activeElements = []
+        for e in self.elements:
+            if e.isActive():
+                self.activeElements.append(e)
             
     def drawReactants(self):
         for r in self.reactants:
@@ -175,34 +178,20 @@ class game:
             tmp_products = Reactions[tmp_reactants]
             i = 0
             for p in tmp_products:
-                e = element.Element(self.screen, p)
+                if not element.isActive(p):
+                    self.activateElement(p)
+                e = element.Element(p,self)
+                self.sprites.append(e)
                 e.coords = tuple(map(operator.add,(600,300+VERT_OFFSET),PositionMap[len(tmp_products)][i]))
                 self.products.append(e)
                 i +=1
 
     def drawPages(self):
-        i = 1
         for p in self.pages:
-            if p == self.activePage:
-                frame = pygame.image.load(PATH + 'page_active.png')
-                text = TextProvider.pageText.render(str(p.number), True, BLACK)
-            else:
-                frame = pygame.image.load(PATH + 'page_inactive.png')
-                text = TextProvider.pageText.render(str(p.number), True, BLACK)
-
-            
-            pos = (p.number * 38 -19, 9)
-            textRect = text.get_rect()
-            textRect.center = frame.get_rect().center
-            frame.blit(text, textRect)
-            frameRect = frame.get_rect()
-            frameRect.center = pos
-            self.screen.blit(frame, frameRect)
-            i+=1
-
+            p.draw(self.screen,self.activePage)
         frame = pygame.image.load(PATH + 'page_inactive.png')
         text = TextProvider.pageText.render(str(p.number), True, BLACK)
-        pos = (i * 38 -19, 9)
+        pos = ((len(self.pages)+1) * 38 -19, 9)
         frameRect = frame.get_rect()
         frameRect.center = pos
         self.screen.blit(frame, frameRect)
@@ -216,6 +205,12 @@ class game:
     def drawMute(self):
         #need that... but later
         pass
+
+    def activateElement(self,elementString):
+        element.activate(elementString)
+        e = element.Element(elementString,self)
+        self.activeElements.append(e)
+        self.sprites.append(e)
         
 class MiddleArea:
     def __init__(self,x,y,r):
@@ -229,11 +224,36 @@ class MiddleArea:
     def isinDrop(self, pos):
         return sqrt((self.centerx - pos[0])**2 + (self.centery - pos[1])**2) <= self.radius - (ELEMENT_RADIUS-2)
     
-class Page:
-    def __init__(self, number, elements):
+class Page(pygame.sprite.Sprite):
+    def __init__(self, number, elements,game):
         self.number = number
         self.elements = elements
+        self.center = (self.number * 38 -19, 9)
+        self.text = TextProvider.pageText.render(str(self.number), True, BLACK)
+        frame = pygame.image.load(PATH + 'page_inactive.png')
+        self.rect = frame.get_rect()
+        self.rect.center = self.center
+        self.textRect = self.text.get_rect()
+        self.game = game
 
+    def draw(self, screen, activePage):
+        activePage
+        if self is activePage:
+            frame = pygame.image.load(PATH + 'page_active.png')
+        else:
+            frame = pygame.image.load(PATH + 'page_inactive.png')
+        self.textRect.center = frame.get_rect().center
+        frame.blit(self.text, self.textRect)
+        frameRect = frame.get_rect()
+        frameRect.center = self.center
+        screen.blit(frame, frameRect)
+        
+    def isClicked(self,pos):
+        return self.rect.collidepoint(pos)
+
+    def handleClick(self):
+        self.game.activePage = self
+    
 aGame = game()
 aGame.run()
 aGame.close()

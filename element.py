@@ -1,13 +1,28 @@
-import pygame, pygame.gfxdraw, TextProvider
+import pygame, pygame.gfxdraw, TextProvider, copy
 from pygame.locals import *
 from constants import *
 
+#UUUGLY global data structure
+activeDict = {}
+
+def initializeActive():
+	for e in ElementLabels.keys():
+		activeDict[e] = True
+	activeDict['steam'] = False
+	activeDict['rna'] = False
+
+def activate(e):
+	activeDict[e] = True
+
+def isActive(e):
+	return activeDict[e]
+	
 class Element(pygame.sprite.Sprite):
-	def __init__(self, screen, type):
+	def __init__(self, type,game):
 		super().__init__()
 		self.type = type
 		self.label = ElementLabels[self.type]
-		self.screen = screen
+		self.game = game
 		self.active = True
 		self.radius = ELEMENT_RADIUS
 	
@@ -38,5 +53,17 @@ class Element(pygame.sprite.Sprite):
 		text = TextProvider.captionText.render(self.label, True, BLACK)
 		textRect = text.get_rect()
 		textRect.center = (self.coords[0],self.coords[1]+35)
-		self.screen.blit(frame, frameRect)
-		self.screen.blit(text, textRect)
+		self.game.screen.blit(frame, frameRect)
+		self.game.screen.blit(text, textRect)
+		
+	def handleClick(self):
+		if self in self.game.reactants:
+			self.game.reactants.remove(self)
+			self.game.sprites.remove(self)
+			self.game.react()
+			self.game.pickup = self
+		else:
+			self.game.pickup = copy.copy(self)
+			
+	def isActive(self):
+		return activeDict[self.type]
