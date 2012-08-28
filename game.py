@@ -108,7 +108,7 @@ class game:
             self.scenes[self.currentScene].number = 1
             
     def renderTurorial(self):
-        text = TextProvider.introText.render(T_tutorial[self.tutorial.number - 1], True, WHITE)
+        text = TextProvider.introText.render(T_tutorial[self.tutorial.number - 1], True, BLACK)
         textRect = text.get_rect()
         textRect.midbottom = (self.screen.get_rect().midbottom[0], self.screen.get_rect().midbottom[1]-20)
         self.screen.blit(text, textRect)
@@ -116,6 +116,7 @@ class game:
     def renderGame(self):
         if self.init:
             pygame.mixer.music.play()
+            pygame.mixer.music.set_volume(0.7)
             self.init = False
             
         self.screen.fill(BG_COLOR)
@@ -149,7 +150,7 @@ class game:
 
     def generateElements(self):
         self.elements = []
-        for e in ElementLabels.keys():
+        for e in ElementData.keys():
             self.elements.append(element.Element(e,self))
 
     def generateElementBar(self):
@@ -200,6 +201,7 @@ class game:
         if self.song < len(MUSIC)-1:
             self.song +=1
         pygame.mixer.music.load(PATH + MUSIC[self.song])
+        pygame.mixer.music.set_volume(0.7)
         pygame.mixer.music.play()
 
     def drawMute(self):
@@ -211,6 +213,7 @@ class game:
         e = element.Element(elementString,self)
         self.activeElements.append(e)
         self.sprites.append(e)
+
         
 class MiddleArea:
     def __init__(self,x,y,r):

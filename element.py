@@ -6,10 +6,8 @@ from constants import *
 activeDict = {}
 
 def initializeActive():
-	for e in ElementLabels.keys():
-		activeDict[e] = True
-	activeDict['steam'] = False
-	activeDict['rna'] = False
+	for e in ElementData.keys():
+		activeDict[e] = ElementData[e][2]
 
 def activate(e):
 	activeDict[e] = True
@@ -21,7 +19,7 @@ class Element(pygame.sprite.Sprite):
 	def __init__(self, type,game):
 		super().__init__()
 		self.type = type
-		self.label = ElementLabels[self.type]
+		self.label = ElementData[self.type][0]
 		self.game = game
 		self.active = True
 		self.radius = ELEMENT_RADIUS
