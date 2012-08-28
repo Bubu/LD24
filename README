@@ -1,3 +1,23 @@
 My game for the 24th iteration of Ludum Dare 48 - Theme is evolution!
 
-Description to come...
+Darn! I'm not finished! :-(
+First I slipped in the Jam and then I still didn't make it. Just a few hours missing to being playable...argh, so close! I'll finish it tomorrow and upload a post-jam version.
+
+Second Ludum Dara entry, this time from me alone. First time working with Pygame, which has been amazing!
+
+The game: Your goal is it to recreate the evolution of the planet earth from it's early beginnings as boiling magma sphere to the evolution of life, humans and civilization.
+You combine multiple Elements to unlock new ones. Just try it, it's easy!
+
+PS: A lot of pictures are still missing, I did not have the time to create them for all elements)
+
+
+Credits:
+- Coded from scratch with Python 3 + Pygame
+- Graphics with Inkscape and Photoshop (with help from f-w with the title image, thanks!)
+- Music generated with autotracker-bu
+- Generated the standalone app with cx_freeze
+- Title image is an adaption from here: http://www.flickr.com/photos/gsfc/7753691170/ (CC-by, NASA)
+- The Font is "EB Garamond" from here: http://openfontlibrary.org/en/font/eb-garamond (OFL License)
+
+Inspiration was this game: http://www.gamesgames.com/game/Alchemy-Evolution.html
+Or actually another one which I played 1,5 years ago or so and can't remember the name.
