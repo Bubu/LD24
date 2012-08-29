@@ -1,0 +1,37 @@
+sun,Sun
+co2,CO2
+steam,H2O (gas.)
+lava,Lava
+iron,Iron
+water,Water
+magfield,mag. Field
+stone,Stone
+sand,Sand
+o2,Oxygen
+sulfur,Sulfur
+h2,hydrogen
+wood,Wood
+carbon,Coal
+fire,Fire
+lightning,Lightning
+
+salpetre,Salpetre
+
+rna,RNA
+dna,DNA
+lipids,Lipids
+proteins,Proteins
+prokaryote,prokaryote
+eukaryote,eukaryote
+plants,plants
+animals,Animals
+photosynthesis,Photosynthesis
+chlorophyll,Chlorophyll
+
+book, Book
+electricity,Electricity
+chemistry, Chemistry
+computer,Computer
+network,Network
+internet,Internet
+web20,social Network

@@ -9,7 +9,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 DGRAY = (99, 98, 96)
 
-INTRO = True
+INTRO = False
 
 # mouse buttons
 LEFT = 1
@@ -39,6 +39,8 @@ T_intro = ['Once upon a time on our blue planet...',
  
 T_tutorial = ['Combine multiple elements to form new ones.',
  'Can you create life? Sentient species? And then?']
+
+StartElements = set(['sun','co2','iron','steam','lava'])
  
 ElementData = {
 				'chlorophyll':('Chlorophyll',(0,0),0),
@@ -89,13 +91,13 @@ ElementData = {
 				'social':('Social',(0,0),0),
 				'steam':('Steam',(0,0),1),
 				'rust':('Rust',(0,0),0),
-				'magnetic field':('mag. field',(0,0),0),
+				'magfield':('mag. field',(0,0),0),
 				 }
 				 
 Reactions = {frozenset(Counter(['water','sun']).items()):('steam',),
 			 frozenset(Counter(['water','co2','sun']).items()):('o2','sugar'),
-			 frozenset(Counter(['iron','lava']).items()):('magnetic field',),			 
-			 frozenset(Counter(['magnetic field','steam']).items()):('water',),
+			 frozenset(Counter(['iron','lava']).items()):('magfield',),			 
+			 frozenset(Counter(['magfield','steam']).items()):('water',),
 			}
 
 PositionMap = {1: [(0,0)], 2: [(-40,0),(40,0)],3:[(-40,-40),(40,-40),(0,40)],4:[(-40,-40),(40,-40),(-40,40),(40,40)]}

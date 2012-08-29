@@ -32,4 +32,4 @@ rna rna; dna
 dna lipids proteins; prokaryote
 prokaryote prokaryote; eukaryote
 prokaryote; cynobacterium
-iron lava; magnetic field
+iron lava; magfield

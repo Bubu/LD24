@@ -1,4 +1,4 @@
-import pygame, pygame.gfxdraw, sys, element, operator, TextProvider, copy
+import pygame, pygame.gfxdraw, sys, element, operator, TextProvider, copy, gameObjects
 from pygame.locals import *
 from constants import *
 from util import number
@@ -33,7 +33,7 @@ class game:
         self.generateElementBar()
         self.sprites = copy.copy(self.activeElements) # sprites = clickable elements
         
-        self.pages = [Page(1, self.activeElements, self),Page(2, [], self)]
+        self.pages = [gameObjects.Page(1, self.activeElements, self),gameObjects.Page(2, [], self)]
         self.activePage = self.pages[0]
         self.sprites  = self.sprites + copy.copy(self.pages)
         self.song = 0
@@ -226,36 +226,6 @@ class MiddleArea:
 
     def isinDrop(self, pos):
         return sqrt((self.centerx - pos[0])**2 + (self.centery - pos[1])**2) <= self.radius - (ELEMENT_RADIUS-2)
-    
-class Page(pygame.sprite.Sprite):
-    def __init__(self, number, elements,game):
-        self.number = number
-        self.elements = elements
-        self.center = (self.number * 38 -19, 9)
-        self.text = TextProvider.pageText.render(str(self.number), True, BLACK)
-        frame = pygame.image.load(PATH + 'page_inactive.png')
-        self.rect = frame.get_rect()
-        self.rect.center = self.center
-        self.textRect = self.text.get_rect()
-        self.game = game
-
-    def draw(self, screen, activePage):
-        activePage
-        if self is activePage:
-            frame = pygame.image.load(PATH + 'page_active.png')
-        else:
-            frame = pygame.image.load(PATH + 'page_inactive.png')
-        self.textRect.center = frame.get_rect().center
-        frame.blit(self.text, self.textRect)
-        frameRect = frame.get_rect()
-        frameRect.center = self.center
-        screen.blit(frame, frameRect)
-        
-    def isClicked(self,pos):
-        return self.rect.collidepoint(pos)
-
-    def handleClick(self):
-        self.game.activePage = self
     
 aGame = game()
 aGame.run()

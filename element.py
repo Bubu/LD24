@@ -15,6 +15,35 @@ def activate(e):
 def isActive(e):
 	return activeDict[e]
 	
+class TypeBar:
+	def __init__(self):
+		self.types = []
+		
+		f = open(PATH + 'elements.txt', mode = 'r')
+		page = 1
+		for line in f:
+			if line == '':
+				page += 1
+			else:
+				ls = line.split(',')
+				self.types.append(Type(ls[0],ls[1], page, ls[0] in StartElements))
+		
+		self.pages = []
+		
+	
+	def activateType(self,type):
+		pass
+	
+	def renderTypes(self,screen):
+		pass
+	
+class Type:
+	def __init__(self,type,caption,page,unlocked):
+		self.type = type
+		self.caption = caption
+		self.page = page
+		self.unlocked = unlocked
+	
 class Element(pygame.sprite.Sprite):
 	def __init__(self, type,game):
 		super().__init__()
