@@ -1,32 +1,42 @@
-import pygame, TextProvider
+import gameSprites
 from constants import *
 
-class Page(pygame.sprite.Sprite): #should become just the object, seperate the sprite
-    def __init__(self, number, elements,game):
-        self.number = number
-        self.elements = elements
-        self.center = (self.number * 38 -19, 9)
-        self.text = TextProvider.pageText.render(str(self.number), True, BLACK)
-        frame = pygame.image.load(PATH + 'page_inactive.png')
-        self.rect = frame.get_rect()
-        self.rect.center = self.center
-        self.textRect = self.text.get_rect()
-        self.game = game
-
-    def draw(self, screen, activePage):
-        activePage
-        if self is activePage:
-            frame = pygame.image.load(PATH + 'page_active.png')
-        else:
-            frame = pygame.image.load(PATH + 'page_inactive.png')
-        self.textRect.center = frame.get_rect().center
-        frame.blit(self.text, self.textRect)
-        frameRect = frame.get_rect()
-        frameRect.center = self.center
-        screen.blit(frame, frameRect)
+class TypeBar:
+    def __init__(self):
+        self.types = []
+        self.pages = [Page(1,True)]
+        self.activePage = self.pages[0]
         
-    def isClicked(self,pos):
-        return self.rect.collidepoint(pos)
+        f = open(PATH + 'elements.txt', mode = 'r')
+        page = 1
+        for line in f:
+            if line == '':
+                page += 1
+                self.pages.append(Page(page))
+            else:
+                ls = line.split(',')
+                self.types.append(Type(ls[0],ls[1], page, ls[0] in StartElements))
 
-    def handleClick(self):
-        self.game.activePage = self
+    def activateType(self,type):
+        pass
+    
+    def renderTypes(self,screen):
+        pass
+    
+    def renderPages(self,screen):
+        for p in self.pages:
+            p.draw(screen)
+    
+class Type:
+    def __init__(self,type,caption,page,unlocked):
+        self.type = type
+        self.page = page
+        self.unlocked = unlocked
+        self.sprite = gameSprites.ElementSprite(type, caption)
+
+class Page:
+    def __init__(self, number, activated = False):
+        self.sprite = gameSprites.PageSprite(number)
+        self.number = number
+        self.activated = activated
+        self.types = []
