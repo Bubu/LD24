@@ -21,9 +21,9 @@ class ElementSprite(Sprite):
         super().__init__()
         self.type = type
         self.radius = ELEMENT_RADIUS
-        self.surface = self.createSurface(caption)        
+        self.surface = self.createSurface(caption)
     
-    def createSurface(self,caption)
+    def createSurface(self, caption):
         frame = pygame.image.load(PATH + 'empty.png')
         try:
             ele = pygame.image.load(PATH + self.type + '.png')

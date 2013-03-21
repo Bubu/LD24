@@ -29,6 +29,8 @@ class game:
         self.products = []
         TextProvider.init()
 
+        self.clock = pygame.time.Clock()
+
         self.generateElements()
         self.generateElementBar()
         self.sprites = copy.copy(self.activeElements) # sprites = clickable elements
@@ -55,7 +57,8 @@ class game:
                 self.renderGame()
             if self.tutorial.number != -1:
                 self.renderTurorial()
-                
+
+            self.clock.tick(FRAMERATE)
             pygame.display.update()
             event = pygame.event.wait()
             if event.type == QUIT:

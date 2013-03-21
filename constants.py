@@ -9,6 +9,7 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 DGRAY = (99, 98, 96)
 
+FRAMERATE = 60
 INTRO = False
 
 # mouse buttons
